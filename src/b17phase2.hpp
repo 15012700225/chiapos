@@ -50,7 +50,10 @@ std::vector<uint64_t> b17RunPhase2(
         // std::vector<std::pair<uint64_t, uint64_t> > match_positions;
         Timer table_timer;
 
-        std::cout << "Backpropagating on table " << table_index << std::endl;
+//        std::cout << "Backpropagating on table " << table_index << std::endl;
+
+        Logger::PrintLog({  "Backpropagating on table ", std::to_string(table_index)});
+
 
         uint16_t left_metadata_size = kVectorLens[table_index] * k;
 
@@ -377,7 +380,11 @@ std::vector<uint64_t> b17RunPhase2(
         }
         new_table_sizes[table_index - 1] = left_entry_counter;
 
-        std::cout << "\tWrote left entries: " << left_entry_counter << std::endl;
+//        std::cout << "\tWrote left entries: " << left_entry_counter << std::endl;
+
+        Logger::PrintLog({ "\tWrote left entries: " , std::to_string(left_entry_counter) });
+
+
         table_timer.PrintElapsed("Total backpropagation time::");
 
         tmp_1_disks[table_index].Write(

@@ -163,8 +163,11 @@ Phase3Results RunPhase3(
     for (int table_index = 1; table_index < 7; table_index++) {
         Timer table_timer;
         Timer computation_pass_1_timer;
-        std::cout << "Compressing tables " << table_index << " and " << (table_index + 1)
-                  << std::endl;
+//        std::cout << "Compressing tables " << table_index << " and " << (table_index + 1)
+//                  << std::endl;
+
+        Logger::PrintLog({  "Compressing tables " , std::to_string(table_index), " and ", std::to_string( (table_index + 1)) });
+
 
         // The park size must be constant, for simplicity, but must be big enough to store EPP
         // entries. entry deltas are encoded with variable length, and thus there is no
@@ -491,7 +494,10 @@ Phase3Results RunPhase3(
         }
 
         Encoding::ANSFree(kRValues[table_index - 1]);
-        std::cout << "\tWrote " << final_entries_written << " entries" << std::endl;
+//        std::cout << "\tWrote " << final_entries_written << " entries" << std::endl;
+
+        Logger::PrintLog({  "\tWrote " , std::to_string(final_entries_written), " entries"  });
+
 
         final_table_begin_pointers[table_index + 1] =
             final_table_begin_pointers[table_index] + (park_index + 1) * park_size_bytes;

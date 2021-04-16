@@ -201,9 +201,16 @@ struct FileDisk {
             if (writePos > writeMax)
                 writeMax = writePos;
             if (amtwritten != length) {
-                std::cout << "Only wrote " << amtwritten << " of " << length << " bytes at offset "
-                          << begin << " to " << filename_ << "with length " << writeMax
-                          << ". Error " << ferror(f_) << ". Retrying in five minutes." << std::endl;
+//                std::cout << "Only wrote " << amtwritten << " of " << length << " bytes at offset "
+//                          << begin << " to " << filename_ << "with length " << writeMax
+//                          << ". Error " << ferror(f_) << ". Retrying in five minutes." << std::endl;
+
+                std::stringstream buffer;
+                buffer << "Only wrote " << amtwritten << " of " << length << " bytes at offset "
+                       << begin << " to " << filename_ << "with length " << writeMax
+                       << ". Error " << ferror(f_) << ". Retrying in five minutes." ;
+                Logger::PrintLog({ buffer.str() });
+                
                 std::this_thread::sleep_for(5min);
             }
         } while (amtwritten != length);

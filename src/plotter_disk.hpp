@@ -155,15 +155,24 @@ public:
         }
 #endif /* defined(_WIN32) || defined(__x86_64__) */
 
-        std::cout << std::endl
-                  << "Starting plotting progress into temporary dirs: " << tmp_dirname << " and "
-                  << tmp2_dirname << std::endl;
-        std::cout << "ID: " << Util::HexStr(id, id_len) << std::endl;
-        std::cout << "Plot size is: " << static_cast<int>(k) << std::endl;
-        std::cout << "Buffer size is: " << buf_megabytes << "MiB" << std::endl;
-        std::cout << "Using " << num_buckets << " buckets" << std::endl;
-        std::cout << "Using " << (int)num_threads << " threads of stripe size " << stripe_size
-                  << std::endl;
+//        std::cout << std::endl
+//                  << "Starting plotting progress into temporary dirs: " << tmp_dirname << " and "
+//                  << tmp2_dirname << std::endl;
+
+        Logger::PrintLog({"Starting plotting progress into temporary dirs: " ,tmp_dirname, " and ",tmp2_dirname });
+
+//        std::cout << "ID: " << Util::HexStr(id, id_len) << std::endl;
+//        std::cout << "Plot size is: " << static_cast<int>(k) << std::endl;
+//        std::cout << "Buffer size is: " << buf_megabytes << "MiB" << std::endl;
+//        std::cout << "Using " << num_buckets << " buckets" << std::endl;
+//        std::cout << "Using " << (int)num_threads << " threads of stripe size " << stripe_size
+//                  << std::endl;
+
+        Logger::PrintLog({"ID: " , Util::HexStr(id, id_len) });
+        Logger::PrintLog({"Plot size is: " , std::to_string(static_cast<int>(k) ) });
+        Logger::PrintLog({"Buffer size is: " , std::to_string(buf_megabytes), "MiB" });
+        Logger::PrintLog({"Using " ,   std::to_string(num_buckets), " buckets" });
+        Logger::PrintLog({"Using " ,  std::to_string((int)num_threads ), " threads of stripe size " });
 
         // Cross platform way to concatenate paths, gulrak library.
         std::vector<fs::path> tmp_1_filenames = std::vector<fs::path>();
@@ -210,9 +219,11 @@ public:
 
             assert(id_len == kIdLen);
 
-            std::cout << std::endl
-                      << "Starting phase 1/4: Forward Propagation into tmp files... "
-                      << Timer::GetNow();
+//            std::cout << std::endl
+//                      << "Starting phase 1/4: Forward Propagation into tmp files... "
+//                      << Timer::GetNow();
+            
+            Logger::PrintLog({ "Starting phase 1/4: Forward Propagation into tmp files... "});
 
             Timer p1;
             Timer all_phases;
@@ -238,9 +249,11 @@ public:
                 // Memory to be used for sorting and buffers
                 std::unique_ptr<uint8_t[]> memory(new uint8_t[memory_size + 7]);
 
-                std::cout << std::endl
-                      << "Starting phase 2/4: Backpropagation without bitfield into tmp files... "
-                      << Timer::GetNow();
+//                std::cout << std::endl
+//                      << "Starting phase 2/4: Backpropagation without bitfield into tmp files... "
+//                      << Timer::GetNow();
+
+                Logger::PrintLog({ "Starting phase 2/4: Backpropagation without bitfield into tmp files... "});
 
                 Timer p2;
                 std::vector<uint64_t> backprop_table_sizes = b17RunPhase2(
@@ -289,9 +302,14 @@ public:
                 finalsize = res.final_table_begin_pointers[11];
             }
             else {
-                std::cout << std::endl
-                      << "Starting phase 2/4: Backpropagation into tmp files... "
-                      << Timer::GetNow();
+//                std::cout << std::endl
+//                      << "Starting phase 2/4: Backpropagation into tmp files... "
+//                      << Timer::GetNow();
+
+                Logger::PrintLog({  "Starting phase 2/4: Backpropagation into tmp files... "});
+
+
+
 
                 Timer p2;
                 Phase2Results res2 = RunPhase2(
@@ -346,14 +364,27 @@ public:
             for (size_t i = 1; i <= 7; i++) {
                 total_working_space += table_sizes[i] * EntrySizes::GetMaxEntrySize(k, i, false);
             }
-            std::cout << "Approximate working space used (without final file): "
-                      << static_cast<double>(total_working_space) / (1024 * 1024 * 1024) << " GiB"
-                      << std::endl;
+//            std::cout << "Approximate working space used (without final file): "
+//                      << static_cast<double>(total_working_space) / (1024 * 1024 * 1024) << " GiB"
+//                      << std::endl;
+
+            std::stringstream buffer;
+            buffer  << "Approximate working space used (without final file): "
+                    << static_cast<double>(total_working_space) / (1024 * 1024 * 1024) << " GiB";
+            Logger::PrintLog({ buffer.str() });
 
             std::cout << "Final File size: "
                       << static_cast<double>(finalsize) /
                              (1024 * 1024 * 1024)
                       << " GiB" << std::endl;
+
+            buffer.clear();
+            buffer << "Final File size: "
+                   << static_cast<double>(finalsize) /
+                      (1024 * 1024 * 1024)
+                   << " GiB"  ;
+            Logger::PrintLog({ buffer.str() });
+            
             all_phases.PrintElapsed("Total time =");
         }
 
@@ -389,14 +420,21 @@ public:
                                   << final_2_filename << ". Error " << ec.message()
                                   << ". Retrying in five minutes." << std::endl;
                     } else {
-                        std::cout << "Copied final file from " << tmp_2_filename << " to "
-                                  << final_2_filename << std::endl;
+//                        std::cout << "Copied final file from " << tmp_2_filename << " to "
+//                                  << final_2_filename << std::endl;
+
+                        Logger::PrintLog({ "Copied final file from ", tmp_2_filename, " to ", final_2_filename  });
+                        
                         copy.PrintElapsed("Copy time =");
                         bCopied = true;
 
                         bool removed_2 = fs::remove(tmp_2_filename);
-                        std::cout << "Removed temp2 file " << tmp_2_filename << "? " << removed_2
-                                  << std::endl;
+//                        std::cout << "Removed temp2 file " << tmp_2_filename << "? " << removed_2
+//                                  << std::endl;
+                        Logger::PrintLog({"Removed temp2 file ", tmp_2_filename, "? " , std::to_string(removed_2)  });
+
+
+
                     }
                 }
                 if (bCopied && (!bRenamed)) {
@@ -406,8 +444,12 @@ public:
                                   << final_filename << ". Error " << ec.message()
                                   << ". Retrying in five minutes." << std::endl;
                     } else {
-                        std::cout << "Renamed final file from " << final_2_filename << " to "
-                                  << final_filename << std::endl;
+//                        std::cout << "Renamed final file from " << final_2_filename << " to "
+//                                  << final_filename << std::endl;
+
+                        Logger::PrintLog({ "Renamed final file from " , final_2_filename, " to ", final_filename  });
+
+
                         bRenamed = true;
                     }
                 }

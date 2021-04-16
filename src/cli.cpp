@@ -110,14 +110,16 @@ int main(int argc, char *argv[]) try {
         HelpAndQuit(options);
     }
     operation = argv[1];
-    std::cout << "operation: " << operation << std::endl;
-
+//    std::cout << "operation: " << operation << std::endl;
+    Logger::PrintLog({"operation: " ,operation});
+    
     if (operation == "help") {
         HelpAndQuit(options);
     } else if (operation == "create") {
-        cout << "Generating plot for k=" << static_cast<int>(k) << " filename=" << filename
-             << " id=" << id << endl
-             << endl;
+//        cout << "Generating plot for k=" << static_cast<int>(k) << " filename=" << filename
+//             << " id=" << id << endl
+//             << endl;
+        Logger::PrintLog({ "Generating plot for k=" , std::to_string( static_cast<int>(k) ),  " filename=" , filename," id=" ,id });
         id = Strip0x(id);
         if (id.size() != 64) {
             cout << "Invalid ID, should be 32 bytes (hex)" << endl;

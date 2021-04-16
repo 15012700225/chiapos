@@ -96,7 +96,9 @@ Phase2Results RunPhase2(
     // the end, just to compact it.
     for (int table_index = 7; table_index > 1; --table_index) {
 
-        std::cout << "Backpropagating on table " << table_index << std::endl;
+//        std::cout << "Backpropagating on table " << table_index << std::endl;
+
+        Logger::PrintLog({  "Backpropagating on table ", std::to_string(table_index)});
 
         Timer scan_timer;
 
@@ -137,10 +139,17 @@ Phase2Results RunPhase2(
             next_bitfield.set(entry_pos + entry_offset);
         }
 
-        std::cout << "scanned table " << table_index << std::endl;
+//        std::cout << "scanned table " << table_index << std::endl;
+
+        Logger::PrintLog({  "scanned table ", std::to_string(table_index)});
+        
         scan_timer.PrintElapsed("scanned time = ");
 
-        std::cout << "sorting table " << table_index << std::endl;
+//        std::cout << "sorting table " << table_index << std::endl;
+
+        Logger::PrintLog({ "sorting table ", std::to_string(table_index)  });
+
+
         Timer sort_timer;
 
         // read the same table again. This time we'll output it to new files:

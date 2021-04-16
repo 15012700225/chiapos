@@ -81,6 +81,30 @@ inline uint64_t bswap_64(uint64_t x) { return __builtin_bswap64(x); }
 #include <cpuid.h>
 #endif
 
+class Logger {
+public:
+    static void PrintLog(std::initializer_list<std::string> li)
+    {
+        std::string str;
+        for (auto beg = li.begin(); beg != li.end(); ++beg) {
+            str += *beg;
+        }
+        std::cout << GetNowForLogging()<< str << std::endl;
+    };
+    static char *GetNowForLogging()
+    {
+        static char str_time[32];
+        struct tm *local_time;
+        time_t utc_time;
+
+        utc_time = time (nullptr);
+        local_time = localtime(&utc_time);
+        strftime(str_time, sizeof(str_time), "[%Y-%m-%d %H:%M:%S] ", local_time);
+
+        return str_time;
+    };
+};
+
 class Timer {
 public:
     Timer()
@@ -99,6 +123,10 @@ public:
         auto tt = std::chrono::system_clock::to_time_t(now);
         return ctime(&tt);  // ctime includes newline
     }
+    
+  
+
+  
 
     void PrintElapsed(const std::string &name) const
     {
@@ -128,8 +156,10 @@ public:
 
         double cpu_ratio = static_cast<int>(10000 * (cpu_time_ms / wall_clock_ms)) / 100.0;
 
-        std::cout << name << " " << (wall_clock_ms / 1000.0) << " seconds. CPU (" << cpu_ratio
-                  << "%) " << Timer::GetNow();
+//        std::cout << name << " " << (wall_clock_ms / 1000.0) << " seconds. CPU (" << cpu_ratio
+//                  << "%) " << Timer::GetNow();
+        
+        Logger::PrintLog({name, " ", std::to_string( (wall_clock_ms / 1000.0) ),  " seconds. CPU (" ,std::to_string(cpu_ratio),  "%) "  });
     }
 
 private:

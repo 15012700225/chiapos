@@ -277,7 +277,8 @@ void* phase1_thread(THREADDATA* ptd)
                         // Compute all matches between the two buckets and save indeces.
                         idx_count = f.FindMatches(bucket_L, bucket_R, idx_L, idx_R);
                         if(idx_count >= 10000) {
-                            std::cout << "sanity check: idx_count exceeded 10000!" << std::endl;
+//                            std::cout << "sanity check: idx_count exceeded 10000!" << std::endl;
+                            Logger::PrintLog({ "sanity check: idx_count exceeded 10000!"});
                             exit(0);
                         }
                         // We mark entries as used if they took part in a match.
@@ -600,7 +601,9 @@ std::vector<uint64_t> RunPhase1(
     bool const enable_bitfield,
     bool const show_progress)
 {
-    std::cout << "Computing table 1" << std::endl;
+//    std::cout << "Computing table 1" << std::endl;
+  Logger::PrintLog({"Computing table 1"  });
+  
     globals.stripe_size = stripe_size;
     globals.num_threads = num_threads;
     Timer f1_start_time;
@@ -666,8 +669,8 @@ std::vector<uint64_t> RunPhase1(
             }
         }
 
-        std::cout << "Computing table " << int{table_index + 1} << std::endl;
-        // Start of parallel execution
+//        std::cout << "Computing table " << int{table_index + 1} << std::endl;
+        Logger::PrintLog({"Computing table ", std::to_string(int{table_index + 1})});
 
         FxCalculator f(k, table_index + 1);  // dummy to load static table
 
@@ -730,8 +733,9 @@ std::vector<uint64_t> RunPhase1(
         // end of parallel execution
 
         // Total matches found in the left table
-        std::cout << "\tTotal matches: " << globals.matches << std::endl;
-
+//        std::cout << "\tTotal matches: " << globals.matches << std::endl;
+        Logger::PrintLog({"\tTotal matches: ", std::to_string(globals.matches)});
+        
         table_sizes[table_index] = globals.left_writer_count;
         table_sizes[table_index + 1] = globals.right_writer_count;
 
