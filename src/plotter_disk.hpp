@@ -273,9 +273,13 @@ public:
                 // Now we open a new file, where the final contents of the plot will be stored.
                 uint32_t header_size = WriteHeader(tmp2_disk, k, id, memo, memo_len);
 
-                std::cout << std::endl
-                      << "Starting phase 3/4: Compression without bitfield from tmp files into " << tmp_2_filename
-                      << " ... " << Timer::GetNow();
+//                std::cout << std::endl
+//                      << "Starting phase 3/4: Compression without bitfield from tmp files into " << tmp_2_filename
+//                      << " ... " << Timer::GetNow();
+
+                Logger::PrintLog({ "Starting phase 3/4: Compression without bitfield from tmp files into ", tmp_2_filename,  " ... "  });
+
+
                 Timer p3;
                 b17Phase3Results res = b17RunPhase3(
                     memory.get(),
@@ -293,9 +297,13 @@ public:
                     show_progress);
                 p3.PrintElapsed("Time for phase 3 =");
 
-                std::cout << std::endl
-                      << "Starting phase 4/4: Write Checkpoint tables into " << tmp_2_filename
-                      << " ... " << Timer::GetNow();
+//                std::cout << std::endl
+//                      << "Starting phase 4/4: Write Checkpoint tables into " << tmp_2_filename
+//                      << " ... " << Timer::GetNow();
+
+                Logger::PrintLog({  "Starting phase 4/4: Write Checkpoint tables into " , tmp_2_filename, " ... "  });
+
+
                 Timer p4;
                 b17RunPhase4(k, k + 1, tmp2_disk, res, show_progress, 16);
                 p4.PrintElapsed("Time for phase 4 =");
@@ -328,9 +336,13 @@ public:
                 // Now we open a new file, where the final contents of the plot will be stored.
                 uint32_t header_size = WriteHeader(tmp2_disk, k, id, memo, memo_len);
 
-                std::cout << std::endl
-                      << "Starting phase 3/4: Compression from tmp files into " << tmp_2_filename
-                      << " ... " << Timer::GetNow();
+//                std::cout << std::endl
+//                      << "Starting phase 3/4: Compression from tmp files into " << tmp_2_filename
+//                      << " ... " << Timer::GetNow();
+
+                Logger::PrintLog({  "Starting phase 3/4: Compression from tmp files into ",  tmp_2_filename, " ... "});
+
+
                 Timer p3;
                 Phase3Results res = RunPhase3(
                     k,
@@ -346,9 +358,14 @@ public:
                     show_progress);
                 p3.PrintElapsed("Time for phase 3 =");
 
-                std::cout << std::endl
-                      << "Starting phase 4/4: Write Checkpoint tables into " << tmp_2_filename
-                      << " ... " << Timer::GetNow();
+//                std::cout << std::endl
+//                      << "Starting phase 4/4: Write Checkpoint tables into " << tmp_2_filename
+//                      << " ... " << Timer::GetNow();
+
+
+                Logger::PrintLog({  "Starting phase 4/4: Write Checkpoint tables into " , tmp_2_filename,   " ... " });
+                
+                
                 Timer p4;
                 RunPhase4(k, k + 1, tmp2_disk, res, show_progress, 16);
                 p4.PrintElapsed("Time for phase 4 =");
@@ -373,17 +390,17 @@ public:
                     << static_cast<double>(total_working_space) / (1024 * 1024 * 1024) << " GiB";
             Logger::PrintLog({ buffer.str() });
 
-            std::cout << "Final File size: "
-                      << static_cast<double>(finalsize) /
-                             (1024 * 1024 * 1024)
-                      << " GiB" << std::endl;
+//            std::cout << "Final File size: "
+//                      << static_cast<double>(finalsize) /
+//                             (1024 * 1024 * 1024)
+//                      << " GiB" << std::endl;
 
-            buffer.clear();
-            buffer << "Final File size: "
+            std::stringstream buffer1;
+            buffer1 << "Final File size: "
                    << static_cast<double>(finalsize) /
                       (1024 * 1024 * 1024)
                    << " GiB"  ;
-            Logger::PrintLog({ buffer.str() });
+            Logger::PrintLog({ buffer1.str() });
             
             all_phases.PrintElapsed("Total time =");
         }
@@ -514,7 +531,11 @@ private:
 
         uint32_t bytes_written =
             header_text.size() + kIdLen + 1 + 2 + kFormatDescription.size() + 2 + memo_len + 10 * 8;
-        std::cout << "Wrote: " << bytes_written << std::endl;
+//        std::cout << "Wrote: " << bytes_written << std::endl;
+
+        Logger::PrintLog({  "Wrote: "  , std::to_string(bytes_written) });
+
+
         return bytes_written;
     }
 };

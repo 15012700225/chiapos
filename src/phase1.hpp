@@ -545,7 +545,9 @@ void* F1thread(int const index, uint8_t const k, const uint8_t* id, std::mutex* 
 
     // Instead of computing f1(1), f1(2), etc, for each x, we compute them in batches
     // to increase CPU efficency.
-    for (uint64_t lp = index; lp <= (((uint64_t)1) << (k - kBatchSizes));
+    //csj:比较慢的地方。
+    uint64_t loopCount = ((uint64_t)1) << (k - kBatchSizes);
+    for (uint64_t lp = index; lp <= loopCount;
          lp = lp + globals.num_threads)
     {
         // For each pair x, y in the batch

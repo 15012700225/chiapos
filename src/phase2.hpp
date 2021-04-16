@@ -271,7 +271,10 @@ Phase2Results RunPhase2(
     new_table_sizes[table_index] = current_bitfield.count(0, table_size);
     BufferedDisk disk(&tmp_1_disks[table_index], table_size * entry_size);
 
-    std::cout << "table " << table_index << " new size: " << new_table_sizes[table_index] << std::endl;
+//    std::cout << "table " << table_index << " new size: " << new_table_sizes[table_index] << std::endl;
+
+    Logger::PrintLog({ "table ", std::to_string(table_index),  " new size: ", std::to_string(new_table_sizes[table_index] )  });
+
 
     return {
         FilteredDisk(std::move(disk), std::move(current_bitfield), entry_size)
