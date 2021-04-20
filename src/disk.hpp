@@ -35,6 +35,9 @@ using namespace std::chrono_literals; // for operator""min;
 #include "./util.hpp"
 #include "bitfield.hpp"
 
+//csj: 这里改大一点，可以使写入缓存增加，提高效率，减少写盘次数，但优化不大，快一点点。
+//constexpr uint64_t write_cache = 1024 * 1024 * 100;
+//constexpr uint64_t read_ahead = 1024 * 1024 * 100
 constexpr uint64_t write_cache = 1024 * 1024;
 constexpr uint64_t read_ahead = 1024 * 1024;
 
@@ -298,7 +301,7 @@ struct BufferedDisk : Disk
     {
         NeedWriteCache();
         if (begin == write_buffer_start_ + write_buffer_size_) {
-            if (write_buffer_size_ + length <= write_cache) {
+            if (write_buffer_size_ + length <= write_cache) {//1048576
                 ::memcpy(write_buffer_.get() + write_buffer_size_, memcache, length);
                 write_buffer_size_ += length;
                 return;
